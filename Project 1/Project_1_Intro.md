@@ -70,8 +70,8 @@ print(country_region.head())
     
 
 #### Getting/Downloading a file from github:
-![prj%201a.JPG](attachment:prj%201a.JPG)
-![prj%201b.JPG](attachment:prj%201b.JPG)
+![prj%201a.JPG](https://github.com/Jasmy118/MyProjects/blob/master/Project%201/Images%26Files/prj%201a.JPG)
+![prj%201b.JPG](https://github.com/Jasmy118/MyProjects/blob/master/Project%201/Images%26Files/prj%201b.JPG)
 
 ### 4. Jupyter notebooks ♡ plots
 Tables are nice but — as the saying goes — "a plot can show a thousand data points". Notebooks handle plots as well, but it requires a bit of magic. Here magic does not refer to any arcane rituals but to so-called "magic commands" that affect how the Jupyter notebook works. Magic commands start with either % or %% and the command we need to nicely display plots inline is %matplotlib inline. With this magic in place, all plots created in code cells will automatically be displayed inline.
@@ -105,7 +105,7 @@ For example, this (slightly complicated) code will create an interactive map sho
 
 pip install folium in the working environment:
 
-![prj%201c.JPG](attachment:prj%201c.JPG)
+![prj%201c.JPG](https://github.com/Jasmy118/MyProjects/blob/master/Project%201/Images%26Files/prj%201c.JPG)
 
 
 ```python

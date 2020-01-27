@@ -1,8 +1,3 @@
-This is a simple project which reads a csv file, displays the data in it and plot the graph for that data.
-It also does importing map using folium and marking locations.
-
-(Beginner project from Datacamp)
-
 ## PROJECT: INTRODUCTION TO Jupyter Notebook PROJECTS
 ### 1. Jupyter notebook!
 A Jupyter notebook is a document that contains text cells (what you're reading right now) and code cells. What is special with a notebook is that it's interactive: You can change or add code cells, and then run a cell by first selecting it and then clicking the run cell button above ( ▶| Run ) or hitting ctrl + enter.

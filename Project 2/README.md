@@ -3,13 +3,13 @@
 
 ### 1. Import Python libraries
 ![honey.jpg](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/honey.jpg)
-![honey.jpg](./master/Project%202/Images%26Files/honey.jpg)
+
 A honey bee.
 
 The question at hand is: can a machine identify a bee as a honey bee or a bumble bee? These bees have different behaviors and appearances, but given the variety of backgrounds, positions, and image resolutions it can be a challenge for machines to tell them apart.
 
 Being able to identify bee species from images is a task that ultimately would allow researchers to more quickly and effectively collect field data. Pollinating bees have critical roles in both ecology and agriculture, and diseases like colony collapse disorder threaten these species. Identifying different species of bees in the wild means that we can better understand the prevalence and growth of these important insects.
-![bumble.jpg](attachment:bumble.jpg)
+![bumble.jpg](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/bumble.jpg)
 A bumble bee.
 
 This notebook walks through loading and processing images. After loading and processing these images, they will be ready for building models that can automatically detect honeybees and bumblebees.
@@ -47,7 +47,7 @@ plt.imshow(test_data)
 
 
 
-![png](output_2_1.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_2_1.png)
 
 
 ### 2. Opening images with PIL
@@ -77,7 +77,7 @@ img
 
 
 
-![png](output_4_1.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_4_1.png)
 
 
 
@@ -126,27 +126,27 @@ display(img_flipped)
 ```
 
 
-![png](output_6_0.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_6_0.png)
 
 
 
-![png](output_6_1.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_6_1.png)
 
 
 
-![png](output_6_2.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_6_2.png)
 
 
 
-![png](output_6_3.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_6_3.png)
 
 
 
-![png](output_6_4.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_6_4.png)
 
 
 
-![png](output_6_5.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_6_5.png)
 
 
 ### 4. Images as arrays of data
@@ -154,7 +154,7 @@ What is an image? So far, PIL has handled loading images and displaying them. Ho
 
 Most image formats have three color "channels": red, green, and blue (some images also have a fourth channel called "alpha" that controls transparency). For each pixel in an image, there is a value for every channel.
 
-![AdditiveColor.png](attachment:AdditiveColor.png)
+![AdditiveColor.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/AdditiveColor.png)
 
 The way this is represented as data is as a three-dimensional matrix. The width of the matrix is the width of the image, the height of the matrix is the height of the image, and the depth of the matrix is the number of channels. So, as we saw, the height and width of our image are both 100 pixels. This means that the underlying data is a matrix with the dimensions 100x100x3.
 
@@ -191,19 +191,19 @@ plt.show()
     
 
 
-![png](output_8_1.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_8_1.png)
 
 
 
-![png](output_8_2.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_8_2.png)
 
 
 
-![png](output_8_3.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_8_3.png)
 
 
 
-![png](output_8_4.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_8_4.png)
 
 
 ### 5. Explore the color channels
@@ -238,7 +238,7 @@ plot_rgb(img_data)
 ```
 
 
-![png](output_10_0.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_10_0.png)
 
 
 ### 6. Honey bees and bumble bees (i)
@@ -262,11 +262,11 @@ plot_rgb(honey_data)
 ```
 
 
-![png](output_12_0.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_12_0.png)
 
 
 
-![png](output_12_1.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_12_1.png)
 
 
 ### 7. Honey bees and bumble bees (ii)
@@ -290,11 +290,11 @@ plot_rgb(bumble_data)
 ```
 
 
-![png](output_14_0.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_14_0.png)
 
 
 
-![png](output_14_1.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_14_1.png)
 
 
 ### 8. Simplify, simplify, simplify
@@ -329,18 +329,18 @@ plot_kde(honey_bw_arr, 'k')
 ```
 
 
-![png](output_16_0.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_16_0.png)
 
 
     Our NumPy array has the shape: (100, 100)
     
 
 
-![png](output_16_2.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_16_2.png)
 
 
 
-![png](output_16_3.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_16_3.png)
 
 
 
@@ -351,7 +351,7 @@ plot_kde(honey_bw_arr, 'k')
 
 
 
-![png](output_16_5.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_16_5.png)
 
 
 ### 9. Save the images!
@@ -384,11 +384,11 @@ honey_bw_hc.save('./saved_images/bw_hc.jpg')
 ```
 
 
-![png](output_18_0.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_18_0.png)
 
 
 
-![png](output_18_1.png)
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/output_18_1.png)
 
 
 ### 10. Make a pipeline

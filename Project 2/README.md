@@ -442,3 +442,19 @@ for img_path in image_paths:
 ```python
 
 ```
+bw_bee_1
+![bw_bee_1.jpg](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/saved_images/bw_bee_1.jpg)
+rcz_bee_1
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/saved_images/rcz_bee_1.jpg)
+bw_bee_12
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/saved_images/bw_bee_12.jpg)
+rcz_bee_12
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/saved_images/rcz_bee_12.jpg)
+bw_bee_2
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/saved_images/bw_bee_2.jpg)
+rcz_bee_2
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/saved_images/rcz_bee_2.jpg)
+bw_bee_3
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/saved_images/bw_bee_3.jpg)
+rcz_bee_3
+![png](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/saved_images/rcz_bee_3.jpg)

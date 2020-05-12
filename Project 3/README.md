@@ -48,12 +48,12 @@ Finally, the created model is used to find the high risk subjects and for predic
 
 #### Method 1 : Non Parametric Analysis for single sample
 
-##### Survival function with Kaplan-Meier Estimator
+#### *Survival function with Kaplan-Meier Estimator*
 -	According to Kaplan-Meier test, there is a 50% chance that cancer might make a progress within 4.16 years (49.8 months) with a confidence interval of 3.74 - 4.65 (44.8 - 55.7).
 
 ![8.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/8.png)
 
-##### Nelson-Aalen Estimator
+#### *Nelson-Aalen Estimator*
 -	With Nelson-Aalen estimator, there is a 50% chance of progression of cancer within 4.21 years (slightly different from Kaplan-Meier), but confidence interval exactly same as Kaplan-Meier 3.74 - 4.65.
 
 ![9.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/9.png)
@@ -61,19 +61,19 @@ Finally, the created model is used to find the high risk subjects and for predic
 #### Method 2 : Non Parametric Analysis (group based)
 Here the LogRank test is used to do the statistical test based on : adjuvant therapies (adjXRT, adjCTX), age_group2 and gender. LogRank works for more than 2 groups also, but since it is hard to read we do this only for 2 group covariates.
 
-##### LogRank based on gender
+#### *LogRank based on gender*
 From the LogRank test we can see:
 -	p-value = 0.4 which is very large. So we do not reject H0 i.e. there is no significant difference between female and male survival. Since there is no difference between both groups, it is better to consider this as a single sample to get a single estimate rather than stratifying them as female and male.
 
 ![10.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/10.png)
 
-##### LogRank based on age_group2
+#### *LogRank based on age_group2*
 The null hypothesis for the test is
- H0∶S<sub>a</sub>(t)=S<sub>b</sub>(t)	where
-S_a (t) is the survival function of patients in age group 25 – 50,
-S_b (t) is the survival function of patients of age greater than 50
+ H<sub>0</sub>∶S<sub>a</sub>(t)=S<sub>b</sub>(t)	where
+S<sub>a</sub>(t) is the survival function of patients in age group 25 – 50,
+S<sub>b</sub>(t) is the survival function of patients of age greater than 50
 
--	From LogRank, p-value = 0.05 which is small and so we do not reject H1. i.e. the survival function of these 2 groups are different. So we do the survival function (Kaplan-Meier) for this samples.
+-	From LogRank, p-value = 0.05 which is small and so we do not reject H<sub>1</sub>. i.e. the survival function of these 2 groups are different. So we do the survival function (Kaplan-Meier) for this samples.
 
 From Kaplan-Meier we can infer that:
 -	Patients below and equal to 50 years has higher survival compared to those above 50.
@@ -84,19 +84,19 @@ From Kaplan-Meier we can infer that:
 
 But each age groups have different stages of cancer which might confound our results. So to check this, a stratified LogRank test is done based on dukes_stage.
 
-Stratified LogRank for age_group2 based on dukes_stage
+***Stratified LogRank for age_group2 based on dukes_stage***
 -	The p-value = 0.02 which is still very less. So there is significant difference in survival between the patients for age groups 25-50 and 50+ irrespective of the cancer stage.
 
 ![12.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/12.png)
 
-##### LogRank based on adjuvant chemotherapy (adjCTX)
--	From LogRank, p-value = 0.3 which is very large. So we do not reject H0 i.e.. there is no significant difference in survival function between whether undergone adjCTX or not. Since there is no significant difference between both groups, it is better to consider this as a single sample to get a single estimate rather than stratifying them based on adjuvant chemo therapy.
+#### *LogRank based on adjuvant chemotherapy (adjCTX)*
+-	From LogRank, p-value = 0.3 which is very large. So we do not reject H<sub>0</sub> i.e.. there is no significant difference in survival function between whether undergone adjCTX or not. Since there is no significant difference between both groups, it is better to consider this as a single sample to get a single estimate rather than stratifying them based on adjuvant chemo therapy.
 -	From the Kaplan-Meier, the median survival for those undergone chemo therapy and not are 4.41 and 3.78 respectively but with an overlapping confidence interval of (3.99-5.42) and (3.51-4.60). So it is not significant.
 
 ![13.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/13.png)
 
-##### LogRank based on adjuvant radiation therapy (adjXRT)
--	From LogRank test, p-value = 0.02 which is small and so we do not reject H1. i.e. the survival function of these 2 groups are different. So we will check the Kaplan-Meier estimates(survival function) for both.
+#### *LogRank based on adjuvant radiation therapy (adjXRT)*
+-	From LogRank test, p-value = 0.02 which is small and so we do not reject H<sub>1</sub>. i.e. the survival function of these 2 groups are different. So we will check the Kaplan-Meier estimates(survival function) for both.
 
 From the Kaplan-Meier test we can infer:
 -	There is a 50% chance of cancer progression within 4.1 years for patients who have not undergone adjuvant radiation therapy.
@@ -106,7 +106,7 @@ From the Kaplan-Meier test we can infer:
 
 ![14.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/14.png)
 
-##### Conclusion from LogRank:
+#### *Conclusion from LogRank:*
 From logrank tests above we clearly see that:
 -	There is no significant difference in survival based on gender and adjuvant chemotherapy.
 -	There is difference in survival of patients based on age_group2 and adjuvant radiation therapy. But we will confirm this with Cloglog plot of survival.
@@ -124,23 +124,23 @@ From the survival curves in cloglog scale:
 #### Method 3 : Regression : Cox Proportional Hazards Model (coxph)
 LogRank works for more than 2 groups also, but hard to read. So Coxph is used to analyse continuous variates and those with more than 2 groups. Here I check for survival dependency on age at diagnosis, location of tumour, stage of cancer, age_group3, adjT3.
 
-##### Cox Regression based on age_diag
+#### *Cox Regression based on age_diag*
 -	Age at which cancer is diagnosed is significant as p-value is 0.02 (less than 5%). The positive coefficient means higher the age, higher the risk. The hazards ratio 1.015 indicates an increase in risk of 1.5% as the age increase by one year.
 
 ![17.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/17.png)
 
-##### Cox Regression based on age_group3
+#### *Cox Regression based on age_group3*
 -	Beta coefficient is positive for the age groups '49-69' and '70+', they have a higher risk compared to the age group '25-48'. The hazards ratio is 1.60 and 1.68 for the age groups '49-69' and '70+' respectively, indicating 60 and 68 percent higher risk. But since the p-value greater than 5%, this is not very significant.
 
 ![18.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/18.png)
 
-##### Cox Regression based on adjT3
+#### *Cox Regression based on adjT3*
 -	Risk is twice higher for patients who have not done any of the adjuvant therapies(adjT3None) compared to those who have done both adjuvant therapies. Hazards ratio is 2.3 with confidence interval of 1.12-4.74 and the p-value = 0.02 makes this very significant.
 -	Risk is twice higher for patients who have done only one of the adjuvant therapies(adjT3Single) compared to those who have done both adjuvant therapies. Hazards ratio is 2.3 with confidence interval of 1.08-4.85 and the p-value = 0.03 makes this very significant.
 
 ![19.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/19.png)
 
-##### Cox Regression based on dukes_stage
+#### *Cox Regression based on dukes_stage*
 -	Stage A has significantly lower risk compared to stage B with p-value=0.02.
 -	Stage C is not significantly different from stage B as p value=0.099 which is greater than 5%.
 
@@ -149,7 +149,7 @@ LogRank works for more than 2 groups also, but hard to read. So Coxph is used to
 From above coxph models, we find age_diag, adjT3 and dukes_stage are significant. Now coxph with multiple covariates are done.
 
 #### Cox Regression with multiple covariates
-##### Coxph model with age_diag, dukes_stage, location, adjT3
+#### *Coxph model with age_diag, dukes_stage, location, adjT3*
 -	Negative coefficient for dukes_stageA with a hazards ratio of 0.59 indicates a 41% lower risk for stage A cancer compared to stage B cancer with confidence interval 0.39-0.89. The p-value=0.01 makes this highly significant.
 -	Negative coefficient for dukes_stageC means a lower risk in stage C than B. But since the p-value=0.35 is very high this is not significant. ie Stage C cancer is not significantly different from stage B.
 -	The positive coefficient for the age means higher the age, higher the risk. The hazards ratio 1.012 indicates an increase in risk of 1.2% as the age increase by one year. But this is not very significant as p-value=0.09 is greater than 5%. 
@@ -160,14 +160,14 @@ From above coxph models, we find age_diag, adjT3 and dukes_stage are significant
 
 Since location is not very significant, we will check for the model without location : **age_diag, dukes_stage, adjT3**
 
-##### Coxph model with age_diag, dukes_stage, adjT3
+#### *Coxph model with age_diag, dukes_stage, adjT3*
 -	Positive coefficient for the age means higher the age, higher the risk. The hazards ratio 1.014 with a confidence interval of 1.00-1.03 indicates an increase in risk of 1.4% as the age increase by one year. This is significant as p-value=0.039 is less than 5%.
 
 ![22.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/22.png)
 
 Also adjT3 is a combination variable of adjXRT and adjCTX. Since adjCTX is not significant, we will create the model with adjXRT instead of adjT3.
 
-##### Coxph model with age_diag, dukes_stage, adjXRT
+#### *Coxph model with age_diag, dukes_stage, adjXRT*
 -	Positive coefficient for adjXRTN means higher risk for patients who have not done adjuvant radiation therapy compared to others. Hazards ratio is 2.4 with confidence interval of 1.16-4.93 which means risk is twice higher compared to the patients undergone adjuvant radiation therapy. This is very significant as p-value is 0.019 which is less than 5%.
 
 ![23.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/23.png)
@@ -198,7 +198,7 @@ The p-values are large, so the model is good. So the final model chosen is with 
 
 ### 4.	Results and Conclusions
 
-From the model chosen (age_diag+adjXRT+dukes_stage (Figure 3.15)) and other tests above, we get the following results:
+From the model chosen (**age_diag+adjXRT+dukes_stage** (Figure 3.15)) and other tests above, we get the following results:
 
 -	Undergoing adjuvant radiation therapy is statistically better than not undergoing one.
 -	There is a 50% chance of cancer progression within 4.1 years for patients who have not undergone adjuvant radiation therapy.

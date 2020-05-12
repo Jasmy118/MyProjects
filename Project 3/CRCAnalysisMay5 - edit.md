@@ -12,7 +12,7 @@ library(tidyverse)
 
 Samples were taken from colorectal cancers in surgically resected specimens in 290 colorectal cancer patients. The data for which the disease free survival time and censoring information was not available were removed. The final number of patients for which the data was available was 226. Survival analysis was done with this final data.
 The variables that were available in the data are:
-<table style="border: 1px solid purple" align="left">
+<table style="border: 1px solid purple" align="left" markdown="1">
 <tr style="background-color: purple;color:white">
 <th>Slno</th>
 <th>Variable Name</th>

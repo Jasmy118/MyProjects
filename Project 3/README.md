@@ -69,7 +69,7 @@ From the LogRank test we can see:
 
 ##### LogRank based on age_group2
 The null hypothesis for the test is
- H0∶S_a (t)=S_b (t)	where
+ H0∶S<sub>a</sub>(t)=S<sub>b</sub>(t)	where
 S_a (t) is the survival function of patients in age group 25 – 50,
 S_b (t) is the survival function of patients of age greater than 50
 

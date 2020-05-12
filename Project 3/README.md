@@ -17,14 +17,14 @@ The below columns were added which are modified from the existing ones:
 ![3.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/3.png)
 
 First few datas:
-![4a.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/4a.png)
+![4b.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/4b.png)
 
 ### 3.	Basic descriptive statistics
 
 #### Summary of data
 ![5.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/5.png)
 
-![6.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/6.png)
+![6a.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/6a.png)
 
 #### Event Distribution
 ![7.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/7.png)

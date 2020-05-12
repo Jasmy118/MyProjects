@@ -74,7 +74,7 @@ The variables that were available in the data are:
         </td>
     </tr>
 </table>
-
+![1.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/1.png)
 ### Data Modification
 The below columns were added which are modified from the existing ones:
 <table style="border: 1px solid purple" align="left">

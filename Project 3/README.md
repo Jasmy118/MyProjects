@@ -63,7 +63,7 @@ Here the LogRank test is used to do the statistical test based on : adjuvant the
 
 #### *LogRank based on gender*
 From the LogRank test we can see:
--	p-value = 0.4 which is very large. So we do not reject H0 i.e. there is no significant difference between female and male survival. Since there is no difference between both groups, it is better to consider this as a single sample to get a single estimate rather than stratifying them as female and male.
+-	p-value = 0.4 which is very large. So we do not reject H<sub>0</sub> i.e. there is no significant difference between female and male survival. Since there is no difference between both groups, it is better to consider this as a single sample to get a single estimate rather than stratifying them as female and male.
 
 ![10.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/10.png)
 

@@ -31,16 +31,24 @@ First few datas:
 
 From the summary of the data we find,
 - The sample size is 226(sampleID).
-• Tumour have 4 locations in this sample and has data of the patients at cancer stage A, B and C (location and dukes_stage).
-• Youngest age at which cancer diagnosed in the sample is 26 and oldest is 92(age_diag).
-• There are 106 females and 120 males in the data(gender).
-• The trial period is 142.55 months or 11.9 years(dfs_time and dfs_timeYears).
-• Out of 226 patients, 22 have undergone adjuvant radiation therapy and 87 have undergone adjuvant chemo therapy(adjXRT and adjCTX).
-• There are 27 patients in the age group 25 to 50 and 199 above 50(age_group2).
-• 22 patients between age 25 and 48. Almost equal number of patients in 49 – 69 and above 70(age_group3).
-• 88 patients have undergone atleast one of the adjuvant therapies(adjT2).
-• 21 has undergone both adjuvant therapies, 67 has undergone exactly one of the adjuvant therapies and 138 have not undergone any of the adjuvant therapies(adjT3).
+- Tumour have 4 locations in this sample and has data of the patients at cancer stage A, B and C (location and dukes_stage).
+- Youngest age at which cancer diagnosed in the sample is 26 and oldest is 92(age_diag).
+- There are 106 females and 120 males in the data(gender).
+- The trial period is 142.55 months or 11.9 years(dfs_time and dfs_timeYears).
+- Out of 226 patients, 22 have undergone adjuvant radiation therapy and 87 have undergone adjuvant chemo therapy(adjXRT and adjCTX).
+- There are 27 patients in the age group 25 to 50 and 199 above 50(age_group2).
+- 22 patients between age 25 and 48. Almost equal number of patients in 49 – 69 and above 70(age_group3).
+- 88 patients have undergone atleast one of the adjuvant therapies(adjT2).
+- 21 has undergone both adjuvant therapies, 67 has undergone exactly one of the adjuvant therapies and 138 have not undergone any of the adjuvant therapies(adjT3).
 
+### 4. Questions asked, methods used, results
+The data has the detail whether the patients were undergoing adjuvant therapies. So I am analysing if the adjuvant therapies makes any difference in progression of cancer based on cancer stage, age, gender and tumour location of the subject.
+Note: For the analysis, I am considering time in year.
+Finally, the created model is used to find the high risk subjects and for prediction. 
+
+#### Method 1 : Non Parametric Analysis for single sample
+
+##### Survival function with Kaplan-Meier Estimator
 
 
 

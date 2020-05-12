@@ -68,8 +68,7 @@ From the LogRank test we can see:
 ![10.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/10.png)
 
 #### *LogRank based on age_group2*
-The null hypothesis for the test is
- H<sub>0</sub>∶S<sub>a</sub>(t)=S<sub>b</sub>(t)	where
+The null hypothesis for the test is <br>H<sub>0</sub>∶S<sub>a</sub>(t)=S<sub>b</sub>(t)	where
 S<sub>a</sub>(t) is the survival function of patients in age group 25 – 50,
 S<sub>b</sub>(t) is the survival function of patients of age greater than 50
 

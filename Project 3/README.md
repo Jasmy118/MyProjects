@@ -234,5 +234,3 @@ We can also predict the survival of a particular subject using the survfit funct
 ![32.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/32.png)
 
 ![33.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/33.png)
-
-

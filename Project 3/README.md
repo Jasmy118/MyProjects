@@ -49,7 +49,7 @@ Finally, the created model is used to find the high risk subjects and for predic
 #### Method 1 : Non Parametric Analysis for single sample
 
 ##### Survival function with Kaplan-Meier Estimator
-
-
+-	According to Kaplan-Meier test, there is a 50% chance that cancer might make a progress within 4.16 years (49.8 months) with a confidence interval of 3.74 - 4.65 (44.8 - 55.7).
+![8.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/8.png)
 
 

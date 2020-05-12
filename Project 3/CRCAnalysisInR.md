@@ -14,7 +14,7 @@ Samples were taken from colorectal cancers in surgically resected specimens in 2
 The variables that were available in the data are:
 
 <table style="border: 1px solid purple" align="left" markdown="1">
-<tr style="background-color: purple;color:white">
+<tr style="background-color:purple;color:white" markdown="1">
 <th>Slno</th>
 <th>Variable Name</th>
 <th>Description</th>

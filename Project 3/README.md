@@ -27,7 +27,7 @@ First few datas:
 ![6a.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/6a.png)
 
 #### Event Distribution
-![7.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/7.png)
+![7a.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/7a.png)
 
 From the summary of the data we find,
 - The sample size is 226(sampleID).

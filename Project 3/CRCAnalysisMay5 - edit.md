@@ -3,6 +3,10 @@
 ## 1. Description of data
 
 Samples were taken from colorectal cancers in surgically resected specimens in 290 colorectal cancer patients. The data for which the disease free survival time and censoring information was not available were removed. The final number of patients for which the data was available was 226. Survival analysis was done with this final data.
+![honey.jpg](https://github.com/Jasmy118/MyProjects/blob/master/Project%202/Images%26Files/honey.jpg)
+
+![1.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/1.png)
+
 The variables that were available in the data are:
 <table align="left">
     <tr>
@@ -74,7 +78,7 @@ The variables that were available in the data are:
         </td>
     </tr>
 </table>
-![1.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/1.png)
+
 ### Data Modification
 The below columns were added which are modified from the existing ones:
 <table style="border: 1px solid purple" align="left">

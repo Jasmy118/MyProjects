@@ -214,7 +214,7 @@ Based on the model chosen, we will now identify the subjects at high risk:
 
 ![27.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/27.png)
 
-![28.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/28.png)
+![28a.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/28a.png)
 
 ### Prediction
 To do prediction with the model, the data is split into train and test data. 80% of the data is selected randomly as the train data and the model is trained with this data. We use this model to predict the scores for the test data, find the AUC and plot the ROC. AUC with this model is 0.84.

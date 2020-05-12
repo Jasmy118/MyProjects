@@ -50,6 +50,33 @@ Finally, the created model is used to find the high risk subjects and for predic
 
 ##### Survival function with Kaplan-Meier Estimator
 -	According to Kaplan-Meier test, there is a 50% chance that cancer might make a progress within 4.16 years (49.8 months) with a confidence interval of 3.74 - 4.65 (44.8 - 55.7).
+
 ![8.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/8.png)
 
+##### Nelson-Aalen Estimator
+-	With Nelson-Aalen estimator, there is a 50% chance of progression of cancer within 4.21 years (slightly different from Kaplan-Meier), but confidence interval exactly same as Kaplan-Meier 3.74 - 4.65.
+
+![9.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/9.png)
+
+#### Method 2 : Non Parametric Analysis (group based)
+Here the LogRank test is used to do the statistical test based on : adjuvant therapies (adjXRT, adjCTX), age_group2 and gender. LogRank works for more than 2 groups also, but since it is hard to read we do this only for 2 group covariates.
+
+##### LogRank based on gender
+From the LogRank test we can see:
+-	p-value = 0.4 which is very large. So we do not reject H0 i.e. there is no significant difference between female and male survival. Since there is no difference between both groups, it is better to consider this as a single sample to get a single estimate rather than stratifying them as female and male.
+
+![10.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/10.png)
+
+##### LogRank based on age_group2
+The null hypothesis for the test is
+ $H0∶S_a (t)=S_b (t)$	where
+S_a (t) is the survival function of patients in age group 25 – 50,
+S_b (t) is the survival function of patients of age greater than 50
+
+-	From LogRank, p-value = 0.05 which is small and so we do not reject H1. i.e. the survival function of these 2 groups are different. So we do the survival function (Kaplan-Meier) for this samples.
+
+From Kaplan-Meier we can infer that:
+-	Patients below and equal to 50 years has higher survival compared to those above 50.
+-	There is a 50% chance of cancer progression within 5.39 years with a confidence interval of 4.21 to 8.31 for patients in age group 25-50.
+-	There is a 50% chance of cancer progression within 4 years with a confidence interval of 3.66 to 4.54 for patients above 50 years.
 

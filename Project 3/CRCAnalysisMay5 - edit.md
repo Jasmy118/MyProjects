@@ -69,7 +69,7 @@ The variables that were available in the data are:
 </tr>
 </table>
         </td>
-        <td><img src="./images/1.png" align="left"/>
+        <td>
 	![1.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/1.png)
         </td>
     </tr>

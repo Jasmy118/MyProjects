@@ -17,7 +17,7 @@ The below columns were added which are modified from the existing ones:
 ![3.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/3.png)
 
 First few datas:
-![4.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/4.png)
+![4a.png](https://github.com/Jasmy118/MyProjects/blob/master/Project%203/Images%26Files/4a.png)
 
 ### 3.	Basic descriptive statistics
 

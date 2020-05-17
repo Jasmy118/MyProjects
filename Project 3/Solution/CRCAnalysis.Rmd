@@ -1,0 +1,448 @@
+---
+title: "R Notebook on Analysis of CRC data"
+output: html_notebook
+---
+
+
+# 2. Basic descriptive statistics
+
+## Importing libraries
+```{r}
+library(survival)
+library(tidyverse)
+library(pROC)
+```
+## Loading and viewing data
+```{r}
+dataCRC <- load("CRC_226_GSE14333.RData")
+clinical_metadata
+cdat <- clinical_data
+table(cdat$dfs_event)
+head(cdat)
+```
+
+## Data modification
+#### Adding a column (dfs_timeYears) which shows time in years.
+#### Creating 2 groups based on age as (25-50) and (above 50+).
+#### Creating 3 groups based on age : (25-39), (40-59), (60-79), (80+).
+#### Adding a column adjT2 which shows whether the patient has undergone an adjuvant therapy or not.
+#### Adding a column adjT3 which shows None - no adjuvant therapy, Both - both adj therapy, Single - one of the adj therapy.
+
+```{r}
+cdat <- mutate(cdat, dfs_timeYears = dfs_time * 30.5 / 365.25, 
+               age_group2 = as.factor(ifelse(age_diag <= 50, '25-50', '50+')), 
+               age_group3 = as.factor(ifelse(age_diag <=48, '25-48',
+                                             ifelse(age_diag > 48 & age_diag <= 69, '49-69', '70+'))),
+               adjT2 = as.factor(ifelse(adjXRT =='N' & adjCTX == 'N', 'N', 'Y')),
+               adjT3 = as.factor(ifelse(adjXRT =='N' & adjCTX == 'N', 'None',
+                                       ifelse(adjXRT =='Y' & adjCTX == 'Y', 'Both','Single'))))
+summary(cdat)
+```
+
+The sample size is 226.
+Tumor have 4 locations in this sample and has data of the patients at cancer stage A, B and C.
+Youngest age at which cancer diagnosed in the sample is 26 and oldest is 92.
+We have 106 females and 120 males in our data.
+The trial period is 142.55 months (11.9 years).
+Out of 226 patients, 22 have undergone adjuvant radiation therapy and 87 have undergone adjuvant chemo therapy.
+
+There are 27 patients in the age group 25 to 50 and 199 above 50.
+22 patients between age 25 and 48. Almost equal number of patients in 49 – 69 and above 70.
+88 patients have undergone atleast one of the adjuvant therapies.
+21 has undergone both adjuvant therapies, 67 has undergone exactly one of the adjuvant therapies and 138 have not undergone any of the adjuvant therapies.
+
+# 3. Questions asked, methods used, results;
+Based on the data given, I would :
+	Estimate the survival of the patients
+	Analyse if the progression of cancer for these patients depend on their age, their cancer stage, location of tumor, the adjuvant therapies they have done and their gender.
+	Create a model and do a risk stratification to identify the subjects at high risk.
+Note : time in years is considered for doing the analysis.
+
+## Non-Parametric Analysis (single sample) - Estimating Survival function
+
+### Kaplan-Meier estimator
+Estimating the survival function using Kaplan Meier estimator. Considering the time in years.
+
+```{r}
+fitKM <- survfit(Surv(dfs_timeYears, dfs_event) ~ 1, data = cdat)
+fitKM
+summary(fitKM)
+plot(fitKM, main = "Kaplan-Meier estimator", conf.int = T, 
+     ylab = "Survival probability", xlab = "time (years)")
+abline(h=0.5, col = "blue")
+```
+According to Kaplan-Meier test, there is a 50% chance that cancer might make a progress within 4.16 years (49.8 months) (median) with a confidence interval of 3.74 - 4.65 (44.8 - 55.7).
+
+### Nelson-Aalen Estimator
+```{r}
+fitNA <- survfit(Surv(dfs_timeYears, dfs_event) ~ 1, data = cdat, type = "fh")
+fitNA
+plot(fitNA, main = "Nelson-Aalen estimator", 
+     ylab = "Survival probability", xlab = "time (years)")
+abline(h=0.5, col = "blue")
+```
+With Nelson-Aalen estimator, there is a 50% chance of progression of cancer within 4.21 years (slightly different from Kaplan Meier), but confidence interval exactly same as Kaplan Meier 3.74 - 4.65.
+
+## Non-parametric Analysis based on groups
+Here the LogRank test is used to do the statistical test based on : adjuvant therapies (adjXRT, adjCTX, adjT2), age_group2 and gender. LogRank works for more than 2 groups also, but since it is hard to read we do this only for 2 group covariates.
+
+### LogRank based on gender:
+The null hypothesis for our test is 
+    
+    𝐻0:𝑆𝑓(𝑡)=𝑆𝑚(𝑡) 
+            where
+                  𝑆𝑓(𝑡)  "is the survival function of female"
+                  𝑆𝑚(𝑡)  "is the survival function of male"
+
+
+```{r}
+genderLogRank <- survdiff(Surv(dfs_timeYears, dfs_event) ~ gender, 
+                          data = cdat)
+genderLogRank
+fitKMGen <- survfit(Surv(dfs_timeYears, dfs_event) ~ gender, data = cdat)
+fitKMGen
+plot(fitKMGen, main = "Kaplan-Meier estimator", col = 1:2, conf.int = T, 
+     ylab = "Survival probability", xlab = "time (years)")
+abline(h=0.5, col = "blue")
+legend(9, 1, legend=c("Female", "Male"), col=1:2, lty=1:1)
+```
+
+From the LogRank test we can see:
+Here p-value = 0.4 which is very large. So we do not reject H0 ie. there is no significant difference between female and male survival. Since there is no difference between both groups, it is better to consider this as a single sample to get a single estimate rather than stratifying them as female and male.
+Males have a slightly higher survival but with an overlapping confidence interval. This survival difference becomes insignificant as p-value is large.
+
+### LogRank based on age_group2. 
+The null hypothesis for our test is 
+
+      𝐻0:𝑆𝑎(𝑡)=𝑆𝑏(𝑡) 
+            where
+                𝑆𝑎(𝑡)  "is the survival function of age_group2 = 26-50"
+                𝑆𝑏(𝑡)  "is the survival function of age_group2 = 50+"
+
+```{r}
+ageLogRank <- survdiff(Surv(dfs_timeYears, dfs_event) ~ age_group2, data = cdat)
+ageLogRank
+```
+From the test we see p-value = 0.05 which is small and so we do not reject H1. ie the survival function of these 2 groups are different.
+So we plot the survival function (Kaplan-Meier) for this samples.
+
+```{r}
+fitKMage2 <- survfit(Surv(dfs_timeYears, dfs_event) ~ age_group2, data = cdat)
+fitKMage2
+```
+
+```{r}
+plot(fitKMage2, main = "Kaplan-Meier estimator", col = 1:2, 
+     ylab = "Survival probability", xlab = "time (years)")
+abline(h=0.5, col = "blue")
+legend(8.5, 1, legend=c("Age 25-50", "Age 50+"), col=1:2, lty=1:1)
+```
+
+From the Kaplan-Meier we can infer that:
+
+Patients below and equal to 50 years has higher survival compared to those above 50.
+
+There is a 50% chance of cancer progression within 5.39 years with a confidence interval of 4.21 to 8.31 for patients in age group 26-50.
+
+There is a 50% chance of cancer progression within 4 years with a confidence interval of 3.66 to 4.54 for patients above 50 years.
+
+But each age groups have different stages of cancer which might confound our results. So a stratified LogRank test is done based on dukes_stage.
+#### Stratified LogRank for age_group2 based on dukes_stage
+
+```{r}
+ageStrat <- survdiff(Surv(dfs_timeYears, dfs_event) ~ age_group2 + strata(dukes_stage), data = cdat)
+ageStrat
+```
+
+The p-value = 0.02 which is still very less. So there is significant difference in survival between the patients for age groups 25-50 and 50+ irrespective of the cancer stage.
+
+### LogRank based on adjuvant chemotherapy (adjCTX)
+The null hypothesis for our test is 
+      
+      𝐻0:𝑆𝑦(𝑡)=𝑆𝑛(𝑡) 
+            where
+                𝑆𝑦(𝑡)  "is the survival function of patients undergone adjuvant Chemotherapy"
+                𝑆𝑛(𝑡)  "is the survival function of patients not undergone adjuvant Chemotherapy"
+
+```{r}
+adjCTXLogRank <- survdiff(Surv(dfs_timeYears, dfs_event) ~ adjCTX, data = cdat)
+adjCTXLogRank
+fitKMadjCTX <- survfit(Surv(dfs_timeYears, dfs_event) ~ adjCTX, data = cdat)
+fitKMadjCTX
+plot(fitKMadjCTX, main = "Kaplan-Meier estimator", col = 1:2, conf.int=T, 
+     ylab = "Survival probability", xlab = "time (years)")
+abline(h=0.5, col = "blue")
+legend(8, 0.85, legend=c("No CT", "Undergone CT"), col=1:2, lty=1:1)
+```
+
+From the logrank we see, p-value = 0.3 which is very large. So we do not reject H0 ie. there is no significant difference in survival function between whether undergone adjCTX or not. Since there is no significant difference between both groups, it is better to consider this as a single sample to get a single estimate rather than stratifying them based on adjuvant chemo therapy.
+
+From the Kaplan-Meier, the median survival for those undergone chemo therapy and not are 4.41 and 3.78 repectively but with an overlapping confidence interval of (3.99-5.42) and (3.51-4.60). So its not  significant.
+
+### LogRank based on adjuvant radiation therapy (adjXRT)
+The null hypothesis for our test is 
+      
+      𝐻0:𝑆𝑦(𝑡)=𝑆𝑛(𝑡) 
+            where
+              𝑆𝑦(𝑡)  "is the survival function of patients undergone adjuvant Radiation therapy"
+              𝑆𝑛(𝑡)  "is the survival function of patients not undergone adjuvant Radiation therapy"
+
+```{r}
+adjXRTLogRank <- survdiff(Surv(dfs_timeYears, dfs_event) ~ adjXRT, data = cdat)
+adjXRTLogRank
+```
+
+From LogRank test we see, p-value = 0.02 which is small and so we do not reject H1. ie the survival function of these 2 groups are different. So we will check the Kaplan-Meier estimates(survival function) for both.
+
+```{r}
+fitKMadjXRT <- survfit(Surv(dfs_timeYears, dfs_event) ~ adjXRT, data = cdat)
+#fitKMadjXRT
+
+plot(fitKMadjXRT, main = "Kaplan-Meier estimator", col = 1:2, conf.int=T, ylab = "Survival probability", xlab = "time (years)")
+abline(h=0.5, col = "blue")
+legend(8, 0.85, legend=c("No RT", "Undergone RT"), col=1:2, lty=1:1)
+```
+
+
+From the above Kaplan-Meier test we can infer:
+
+There is a 50% chance of cancer progression within 4.1 years for patients who have not undergone adjuvant radiation therapy.
+
+There is a 50% chance of cancer progression within 6.21 years for patients who have undergone adjuvant radiation therapy.
+
+So undergoing adjuvant radiation therapy is statistically better than not undergoing one.
+
+In the survival curve we can see that patients undergone radiation therapy has a higher survival.
+
+
+### Conclusion from LogRank:
+From logrank tests above we clearly see that:
+
+There is no signficant difference in survival based on gender, adjuvant chemotherapy.
+
+There is difference in survival of patients based on age_group2 and adjuvant radiation therapy. But we will confirm this with Cloglog plot of survival.
+
+```{r}
+clogXRT <- survfit(Surv(dfs_timeYears, dfs_event) ~ adjXRT, data = cdat)
+plot(clogXRT, main = "Cloglog for adjXRT", fun= "cloglog", col = 1:2)
+legend(0.1, 1, legend=c("No adjXRT", "Undergone adjXRT"), col=1:2, lty=1:1)
+```
+
+```{r}
+clogAge2 <- survfit(Surv(dfs_timeYears, dfs_event) ~ age_group2, data = cdat)
+plot(clogAge2, main = "Cloglog for age_group2", fun= "cloglog", col = 1:2)
+legend(0.1, 1, legend=c("25-50", "50+"), col=1:2, lty=1:1)
+```
+
+From the survival curves in cloglog scale:
+
+For age_group2, the curves are not parallel, so the risks are not proportional and the model does not hold.
+
+For adjXRT, the curves are parallel, so this is good. But the data points are less.
+
+
+## Regression : Cox Proportional Hazards Model (coxph)
+
+LogRank works for more than 2 groups also, but hard to read. So Coxph is used to analyse continuous variates and those with more than 2 groups. Here we check for survival dependency on age at diagnosis, location of tumor, stage of cancer, age_group3, adjT3.
+
+### Cox Regression based on age_diag
+
+First, we will check how the age affect the survival:
+
+```{r}
+fit_AgeCPH <- coxph(Surv(dfs_timeYears, dfs_event) ~ age_diag, data = cdat)
+summary(fit_AgeCPH)
+```
+Age at which cancer is diagnosed is significant as p-value is less than 5%. The positive coefficient means higher the age, higher the risk. The hazards ratio 1.015 indicates an increase in risk of 1.5% as the age increase by one year.
+
+### Cox Regression based on age_group3
+
+```{r}
+fit_Age3CPH <- coxph(Surv(dfs_timeYears, dfs_event) ~ age_group3, data = cdat)
+summary(fit_Age3CPH)
+```
+
+From the above coxph test, since beta coefficient is positive for the age groups '49-69' and '70+', they have a higher risk compared to the age group '25-48'. The hazards ratio is 1.60 and 1.68 for the age groups '49-69' and '70+' respectively, indicating 60 and 68 percent higher risk. But since the p-value greater than 5%, this is not very significant.
+
+### Cox Regression based on adjT3
+
+```{r}
+fit_adjT3CPH <- coxph(Surv(dfs_timeYears, dfs_event) ~ adjT3, data = cdat)
+summary(fit_adjT3CPH)
+```
+
+The positive beta coefficients indicates that there is a higher risk for patients who have not undergone any adjuvant therapy(adjT3None) and who have undergone only one of the adjuvant therapies(adjT3Single) compared to those who underwent both the therapies(adjT3Both). Hazards ratio is 2 in both cases which means risk is twice higher compared to a patient undergone both therapies with confidence intervals of 1.12-5.03 and 1.14-5.19. This is significant as p-value is 0.02 and 0.03 which is less than 5%.
+
+### Cox Regression based on dukes_stage
+
+```{r}
+
+cdat <- mutate(cdat, 
+               dukes_stage = relevel(dukes_stage, ref = "B"))
+fit_stageCPH <- coxph(Surv(dfs_timeYears, dfs_event) ~ dukes_stage, 
+                      data = cdat)
+summary(fit_stageCPH)
+```
+
+Stage A has significantly lower risk compared to stage B with p-value=0.02.
+
+Stage C is not significantly different from stage B as p value=0.099 which is greater than 5%.
+
+### Cox Regression with multiple covariates
+
+Now we will check the cox model based on multiple covariates : age_diag, dukes_stage, location, adjT3
+
+```{r}
+
+cdat <- mutate(cdat, 
+               dukes_stage = relevel(dukes_stage, ref = "B"))
+fit_multiCPH1 <- coxph(Surv(dfs_timeYears, dfs_event) ~ dukes_stage 
+                       + age_diag + adjT3 + location, data = cdat)
+summary(fit_multiCPH1)
+```
+
+Negative coefficient for dukes_stageA with a hazards ratio of 0.59 indicates a 41% lower risk for stage A cancer compared to stage B cancer with confidence interval 0.39-0.89. The p-value=0.01 makes this highly significant.
+
+Negative coefficient for dukes_stageC means a lower risk in stage C than B. But since the p-value=0.35 is very high this is not significant. ie Stage C cancer is not significantly different from stage B.
+
+The positive coefficient for the age means higher the age, higher the risk. The hazards ratio 1.011 indicates an increase in risk of 1.1% as the age increase by one year. But this is not very significant as p-value=0.09 is greater than 5%. 
+
+Positive coefficients for adjT3None and adjT3Single means lower risk for patients who did both adjuvant radiation and chemo therapies compared to others. Hazards ratio is 2 in both cases which means risk is twice higher compared to a patient undergone both therapies with confidence intervals of 1.12-5.27 and 1.08-5.29. This is significant as p-value is 0.03 which is less than 5%.
+
+Beta coefficient for all tumor locations compared to 'Colon' is negative means lower risk in all locations compared to 'Colon', but since p-value for all 3 is very large (0.68, 0.63, 0.52) which makes this insignificant.
+
+Since location is not very significant, we will check for the model without location.
+
+```{r}
+cdat <- mutate(cdat, dukes_stage = relevel(dukes_stage, ref = "B"))
+fit_multiCPH2 <- coxph(Surv(dfs_timeYears, dfs_event) ~ dukes_stage 
+                       + age_diag + adjT3, data = cdat)
+summary(fit_multiCPH2)
+```
+
+Negative coefficient for dukes_stageA with a hazards ratio of 0.59 indicates a 41% lower risk for stage A cancer compared to stage B cancer with confidence interval 0.40-0.89. The p-value=0.01 makes this highly significant.
+
+Negative coefficient for dukes_stageC means a lower risk in stage C than B. But since the p-value=0.29 is very high this is not significant. ie Stage C cancer is not significantly different from stage B.
+
+The positive coefficient for the age means higher the age, higher the risk. The hazards ratio 1.014 with a confidence interval of 1.00-1.03 indicates an increase in risk of 1.4% as the age increase by one year. This is significant as p-value=0.039 is less than 5%.
+
+Also adjT3 is a combination variable of adjXRT and adjCTX. Since adjCTX is not significant, we will create the model with adjXRT instead of adjT3.
+
+```{r}
+
+cdat <- mutate(cdat, dukes_stage = relevel(dukes_stage, ref = "B"),
+               adjXRT = relevel(adjXRT, ref = "Y"))
+fit_multiCPH3 <- coxph(Surv(dfs_timeYears, dfs_event) ~ dukes_stage + 
+                         age_diag + adjXRT, data = cdat)
+summary(fit_multiCPH3)
+```
+
+Positive coefficient for adjXRTN means higher risk for patients who have not done adjuvant radiation therapy compared to others. Hazards ratio is 2.4 with confidence interval of 1.16-4.93 which means risk is twice higher compared to the patients undergone adjuvant radiation therapy. This is very significant as p-value is 0.018 which is less than 5%.
+
+Comparing with concordance scores:
+
+Comparing the above 2 models (dukes_stage + age_diag + adjT3 & dukes_stage + age_diag + adjXRT) with concordance scores, the second one seems to be the better one with higher concordance score.
+
+Comparing the models with AIC scores:
+
+On comparing the above models, we get dukes_stage + age_diag + adjXRT as the better model with lower AIC score of 1496.490.
+
+```{r}
+fits <- list(fit_multiCPH1 = fit_multiCPH1, # dukes_stage + age_diag + adjT3 + location
+             fit_multiCPH2 = fit_multiCPH2, # dukes_stage + age_diag + adjT3
+             fit_multiCPH3 = fit_multiCPH3) # dukes_stage + age_diag + adjXRT
+sapply(fits, AIC)
+```
+
+Automatic model selection based on AIC (stepwise AIC) resulted in the same previous model as dukes_stage + age_diag + adjXRT.
+
+```{r}
+fitCPHFull <- coxph(Surv(dfs_timeYears, dfs_event) ~ location + dukes_stage + age_diag + gender + adjXRT + adjCTX, data = cdat)
+fitCPHInitial <- coxph(Surv(dfs_timeYears, dfs_event) ~ 1, data = cdat)
+MAICmodel <- step(fitCPHInitial, direction = "forward", steps = 15, scope = list(lower = fitCPHInitial, upper = fitCPHFull))
+```
+
+### Model Diagnostics
+
+To see if the model is good enough, Shoenfeld residuals is also checked. The p-values are large, so the model is good. So the final model chosen is with covariates : dukes_stage, age_diag and adjXRT.
+
+```{r}
+res.scho <- cox.zph(coxph(Surv(dfs_timeYears, dfs_event) ~ dukes_stage 
+                               + age_diag + adjXRT, data = cdat))
+res.scho
+```
+
+```{r}
+summary(fit_multiCPH3)
+```
+
+
+## Prediction
+Based on the model, we will identify subjects at high risk:
+
+```{r}
+d_new <- select(cdat, -dfs_time, -dfs_event, -dfs_timeYears)
+d_segmented <-
+  d_new %>%
+  mutate(risk_score = predict(fit_multiCPH3, newdata = d_new, type = "lp"))
+d_segmented %>%
+  arrange(desc(risk_score)) %>%
+  head(10)
+```
+
+## Prediction and ROC-AUC
+
+We will do prediction with the model.
+The data is split into train and test data. 80% of the data is selected randomly as the test data.
+
+```{r}
+set.seed(6)
+len_data = dim(cdat)[1]
+index = sample(seq_len(nrow(cdat)), size = len_data*0.8) 
+train = cdat[index,]
+test = cdat[-index,]
+modelCPH <- coxph(Surv(dfs_timeYears, dfs_event) ~ dukes_stage  + age_diag + adjXRT, data = train)
+```
+```{r}
+d_predict <- test %>%
+  mutate(risk_score = predict(modelCPH, newdata = test, type = "lp"))
+```
+
+ROC-AUC with survivalROC package - not used
+```{r}
+ROCpred <- survivalROC(Stime = d_predict$dfs_timeYears, status = d_predict$dfs_event,
+                       marker = d_predict$risk_score,# cut.values = quantile(score.testing, prob = 0:10/10),
+                       predict.time = 5, method = "KM")
+ROCpred$AUC
+```
+
+ROC plot survivalROC package
+```{r}
+ROCL <- list(roc = ROCpred)
+dfl <- map(ROCL, ~ with(., tibble(cutoff = cut.values, FP, TP)))
+for(nm in names(dfl)) {
+  dfl[[ nm ]]$marker <- nm
+}
+datpred <- do.call(rbind, dfl)
+ggplot(datpred, aes(FP, TP, color = marker)) + geom_line() + theme_bw(base_size = 9)
+```
+
+ROC-AUC with pROC package
+```{r}
+par(pty = "s")
+roc(d_predict$dfs_event, d_predict$risk_score, plot = TRUE, legacy.axes = TRUE,
+    xlab = "False Positive Rate", ylab = "True Positive Rate", col = 2, print.auc = TRUE)
+```
+
+
+## Prediction for a particular subject
+
+```{r}
+predcph <- survfit(modelCPH, newdata = test[1,], type = "aalen")
+summary(predcph)
+plot(predcph, ylab = "predicted suvival")
+```
+
+
+
+
